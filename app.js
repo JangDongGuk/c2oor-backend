@@ -27,21 +27,19 @@ sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생�
     console.error(err);
   });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-
 //use > 미들 웨어를 등록해주는 메서드  - - -미들웨어 밑에 http메서드를 (app.get 같은것들을) 적는게 순서다 .
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
+
 app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 
 
 // catch 404 and forward to error handler

@@ -38,6 +38,15 @@ pipeline {
                 }
             }
         }
+
+        stage('deploy') {
+            steps {
+                
+                sh "scp -i /.ssh/ehdrnr3.pem /ubuntu@13.209.68.41:[디렉토리]
+                sh "npm install"
+                sh "npm run" 
+            }
+        }
     }
 
     post {
