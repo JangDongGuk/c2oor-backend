@@ -13,8 +13,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const signupRouter = require('./routes/signup');
 const jwtRouter = require('./routes/jwt');
-
-
+// const mailerRouter = require('./utils');
 
 dotenv.config();
 
@@ -33,23 +32,22 @@ const { sequelize } = require('./models/index'); //시퀄라이즈
     console.error(err);
   });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.engine('html', require('ejs').renderFile);
+app.use(express.static(__dirname + '/public'));
 
 //use > 미들 웨어를 등록해주는 메서드  - - -미들웨어 밑에 http메서드를 (app.get 같은것들을) 적는게 순서다 .
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/jwt', jwtRouter);
+// app.use('utils', mailerRouter);
 
 
 
@@ -70,7 +68,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-
-//위치 살펴보기
-

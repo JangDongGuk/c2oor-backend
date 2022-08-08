@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 class User extends Sequelize.Model {
     static init(sequelize) {
         return super.init(
-        { 
+        {
           user_name:{
               type: Sequelize.STRING(20)
           },
@@ -19,11 +19,6 @@ class User extends Sequelize.Model {
           user_phone:{
               type: Sequelize.STRING(20)
           },
-          user_salt:{
-              type: Sequelize.STRING(100)
-          }
-        
-      
         },
          { sequelize,
            modelName:"user",

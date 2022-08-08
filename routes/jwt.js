@@ -10,9 +10,10 @@ redisClient.connect();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-router.get ('/', async (req, res, next) => {         
-
+router.get ('/token', async (req, res, next) => {         
+    
     const token = req.headers.authorization 
+    console.log(token)
 
     if (!token) {
         return res.status(401).json({ message: "토큰을찾을수없다." });
@@ -33,7 +34,7 @@ router.get ('/', async (req, res, next) => {
                 return null;
             }else{
                 console.log('decoded => ', decoded);
-                return res.status(201).json({message:"유효한 토큰입니다."})
+                return res.status(201).json({message:"success"})
             }
         });
     } catch(err) {

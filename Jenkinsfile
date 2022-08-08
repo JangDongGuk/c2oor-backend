@@ -19,6 +19,40 @@ pipeline {
                     url: 'https://github.com/JangDongGuk/westudy.git'
             }
         }
+   
+        stage('Build') {
+            steps {
+                sh 'make' 
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'make check || true' 
+                junit '**/target/*.xml' 
+            }
+        }
+
+
+        // stage('Deploy') {
+        //     steops {
+        //         echo '배포'
+                
+        //         sh 'scp -v 0o StrictHostkeyChecking=no -i '
+        //         sh 'ssh -o StrictHostKeyChecking=no JangDongGuk@13.209.68.41:'    
+
+        //         scp -v -o StrictHostKeyChecking=no -i 
+        //         [젠킨스 서버 내 원격 서버 pem파일 경로] [젠킨스 서버 내 원격서버로 전송할 파일경로] 
+        //         [username]@[원격서버주소]:[파일을 저장할 경로]
+
+        //         sshagent(['credentail 식별 값']) {
+        //             sh 'ssh -o StrictHostKeyChecking=no [user name]@[ip address] "whoami"'
+        //             sh "ssh -o StrictHostKeyChecking=no [user name]@[ip address] 'docker pull [이미지 이름]:[태그 이름]'"
+        //             sh "ssh -o StrictHostKeyChecking=no [user name]@[ip address] 'docker run [이미지 이름]:[태그 이름]'"
+        //         } 이런느낌 경로설정으로 그리고 -o StrictHostKeyChecking=no 왜 no으로 설정했는지 인터넷 검색 해보기 까먹음
+        //     }
+        // }
     }
 
     post {
