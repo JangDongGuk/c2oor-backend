@@ -25,7 +25,7 @@ class Cart extends Sequelize.Model{
         );
     }
     static associate(db){
-      //  db.Cart.belongsTo(db.User, {foreignKey: 'user_id',targetKey:'id'})
+  
     };
 };
 

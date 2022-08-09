@@ -17,7 +17,7 @@ router.post ('/sing', async(req, res) => {
         console.log(data)
         const regexp_name = /^[가-힣a-zA-Z]+$/;  
         const regexp_nickname = /^[가-힣|a-z|A-Z|0-9|]{2,10}$/;
-        const regexp_password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}/;  //최소 하나의문자 하나의 숫자 하나의 특문 대소문자 가능
+        const regexp_password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}/;
         const regexp_phone = /^(010|011|016|017|018|019)\d{3,4}\d{4}$/;
         const regexp_email = /^(\w{1,20})+@(\w{1,20})+\.([a-zA-Z]{2,4}$)+$/;
         
@@ -79,7 +79,6 @@ router.post ('/login', async(req,res) => {
         
         User.update({ user_password : await bcrypt.hash(data.password, salt)}, {where :{ user_nickname: data.nickname}});
         return res.status(201).json({ message:"success", token: token  })
-
         }
     catch(err){
         console.log(err);
@@ -91,7 +90,7 @@ router.post('/mail', async(req, res) => {
       
         const data = JSON.stringify(req.body.email)
         const authNum = Math.floor((Math.random() * 1000000) + 1 );
-        const transporter = nodemailer.createTransport({ //내가 주체가되어서 유저한테 메일보내는 계정 설정 구간
+        const transporter = nodemailer.createTransport({
             service: 'gmail',
             host:'smtp.gmail.com',
             port: 587,
@@ -103,7 +102,7 @@ router.post('/mail', async(req, res) => {
         });
 
         const emailNum = String(authNum)
-            transporter.sendMail({ // 유저한테 보내는 메일 내용   
+            transporter.sendMail({
             from: process.env.NODEMAILER_USER,
             to: data,
             subject: "이메일 인증번호",
@@ -111,13 +110,10 @@ router.post('/mail', async(req, res) => {
         }).then(function(result){console.log('result', result)})
           .catch(function(reason){console.log('reason', reason)});
 
-        // await redisClient.setEx(data,1000,emailNum);
-        // res.status(201).json({message:"success"});
         res.status(201).json({
             emailNum : String(emailNum),
             message : "success"
         });
-       
     }
     catch(err) {
         console.log(err);
