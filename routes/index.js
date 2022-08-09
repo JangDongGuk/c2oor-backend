@@ -1,13 +1,17 @@
+require('dotenv').config()
 const express = require('express');
 const router = express.Router();
+const redis = require('redis');
 
-const path = require('path');
-/* GET home page. */
+const redisInit = async() =>  {
+  const redisClient = redis.createClient({'url': "redis://127.0.0.1:6379" });
+  console.log(redisClient);
+  await redisClient.connect();
+}
+redisInit();
+
 router.get('/', function(req, res, next) {
-  // res.render('aaa', { title: 'Exress' });
-  console.log(path.join(__dirname, "views"));
-  console.log((path.resolve(path.join(__dirname, "views"))))
-  req.sendFile(path.join(__dirname, "views", "aaa.html" ));
+  res.render('index.html');
 });
 
-module.exports = router;
+module.exports = router, redisInit;

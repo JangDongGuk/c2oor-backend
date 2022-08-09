@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    tools {nodejs "nodejs"}
     
     environment {
         SLACK_CHANNEL = '#jenkins'
@@ -9,7 +8,7 @@ pipeline {
     stages {
         stage('Start') {
             steps {
-                slackSend (channel: SLACK_CHANNEL , color: '#FFFFOO', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                slackSend (channel: SLACK_CHANNEL, color: '#FFFFOO', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
     
@@ -20,7 +19,7 @@ pipeline {
                     url: 'https://github.com/JangDongGuk/westudy.git'
             }
         }
-
+   
         stage('Build') {
             steps {
                 sh 'make' 
@@ -36,12 +35,11 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
+            steops {
                 echo '배포'
             }
         }
-    }
-    
+
     post {
         success {
             slackSend (channel: SLACK_CHANNEL, color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -50,4 +48,5 @@ pipeline {
             slackSend (channel: SLACK_CHANNEL, color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
     }
+}
 }
