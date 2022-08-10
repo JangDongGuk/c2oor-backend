@@ -14,7 +14,7 @@ const User = require('../models/user');
 router.post ('/sing', async(req, res) => {
     try {  
         const data = req.body  
-        console.log(data)
+        
         const regexp_name = /^[가-힣a-zA-Z]+$/;  
         const regexp_nickname = /^[가-힣|a-z|A-Z|0-9|]{2,10}$/;
         const regexp_password = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}/;
