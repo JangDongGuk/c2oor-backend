@@ -9,6 +9,8 @@ const development = {
     host      : env.DB_HOST,
     port      : parseInt(env.DB_PORT), 
     dialect   : "mysql",
+    timezone  : "+09:00",
+    dialectOptions:{ "dateStrings":true, useUTC: false, "typeCast":true }
 };
-console.log(development);
+
 module.exports = { development };

@@ -13,6 +13,8 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const signupRouter = require('./routes/signup');
 const jwtRouter = require('./routes/jwt');
+const production = require('./routes/production');
+const review = require('./routes/review');
 
 dotenv.config();
 
@@ -43,6 +45,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/jwt', jwtRouter);
+app.use('/production', production);
+app.use('/review', review);
 
 app.use(function(req, res, next) {
   next(createError(404));

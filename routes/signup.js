@@ -50,10 +50,10 @@ router.post ('/sing', async(req, res) => {
             user_salt     : salt
         })
             return res.status(201).json({ message:"success"});
-         
+            
     }  
     catch (err) {
-        console.log(err.message)  
+        console.log(err)  
     }
 });
 
@@ -61,7 +61,8 @@ router.post ('/login', async(req,res) => {
     try {
         const data = req.body
         const check1 = await User.findOne({where :{ user_nickname: data.nickname}})
-    
+        console.log(check1.id)
+
         if (!check1) {
             return res.status(401).json({ message:"not a member"});
         } 
@@ -78,7 +79,7 @@ router.post ('/login', async(req,res) => {
         const salt = await bcrypt.genSalt(10);
         
         User.update({ user_password : await bcrypt.hash(data.password, salt)}, {where :{ user_nickname: data.nickname}});
-        return res.status(201).json({ message:"success", token: token  })
+        return res.status(201).json({ message:"success", token: token, user_id : check1.id  })
         }
     catch(err){
         console.log(err);
