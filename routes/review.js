@@ -58,7 +58,7 @@ router.patch('/review-patch', async(req, res) => {
                 where: { review_text : data.text}})
 
             const updatedat = updated.updatedAt
-            console.log(updatedat)
+        
             return res.status(201).json({meassge: 'success', updaedat: updatedat});
         };
     }catch(err) {

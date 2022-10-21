@@ -10,7 +10,6 @@ const dotenv = require('dotenv');
 const redis = require('redis');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const signupRouter = require('./routes/signup');
 const jwtRouter = require('./routes/jwt');
 const production = require('./routes/production');
@@ -42,7 +41,6 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/signup', signupRouter);
 app.use('/jwt', jwtRouter);
 app.use('/production', production);
