@@ -1,15 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const redis = require('redis');
-const redisClient = redis.createClient();
+import { Router } from 'express';
+const router = Router();
+import { createClient } from 'redis';
+const redisClient = createClient();
 redisClient.connect();
 
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
-const jwt    = require('jsonwebtoken');
+import { createTransport } from 'nodemailer';
+import { genSalt, hash, compareSync } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 require('dotenv').config();
 
-const User = require('../models/user');
+import { findAll, create, findOne, update } from '../models/user';
 
 router.post ('/sing', async(req, res) => {
     try {  
@@ -31,20 +31,20 @@ router.post ('/sing', async(req, res) => {
              
         }
     
-        const check1 = await User.findAll({where :{ user_nickname: data.nickname}})
-        const check2 = await User.findAll({where :{ user_email: data.email}})
-        const check3 = await User.findAll({where :{ user_phone: data.phone}})
+        const check1 = await findAll({where :{ user_nickname: data.nickname}})
+        const check2 = await findAll({where :{ user_email: data.email}})
+        const check3 = await findAll({where :{ user_phone: data.phone}})
   
         if (!(check1.length === 0 && check2.length === 0 && check3.length === 0)) {
             return res.status(401).json({ message:"already exist"});
         } 
         
-        const salt = await bcrypt.genSalt(10)
+        const salt = await genSalt(10)
           
-        await User.create({
+        await create({
             user_name     : data.name,   
             user_nickname : data.nickname,
-            user_password : await bcrypt.hash(data.password, salt),  
+            user_password : await hash(data.password, salt),  
             user_email    : data.email,
             user_phone    : data.phone,
             user_salt     : salt
@@ -60,25 +60,25 @@ router.post ('/sing', async(req, res) => {
 router.post ('/login', async(req,res) => {
     try {
         const data = req.body
-        const check1 = await User.findOne({where :{ user_nickname: data.nickname}})
+        const check1 = await findOne({where :{ user_nickname: data.nickname}})
         console.log(check1.id)
 
         if (!check1) {
             return res.status(401).json({ message:"not a member"});
         } 
     
-        const check2 = bcrypt.compareSync(data.password, check1.get("user_password")); 
+        const check2 = compareSync(data.password, check1.get("user_password")); 
         
         if (!check2) {
             return res.status(401).json({ message:"Password is incorrect"});
         }
         
-        const token = jwt.sign({user_nickname: data.nickname}, process.env.SECRET_KEY, { expiresIn: process.env.JWT_ACCESS_TIME}) 
+        const token = sign({user_nickname: data.nickname}, process.env.SECRET_KEY, { expiresIn: process.env.JWT_ACCESS_TIME}) 
         await redisClient.set(data.nickname, token)
             
-        const salt = await bcrypt.genSalt(10);
+        const salt = await genSalt(10);
         
-        User.update({ user_password : await bcrypt.hash(data.password, salt)}, {where :{ user_nickname: data.nickname}});
+        update({ user_password : await hash(data.password, salt)}, {where :{ user_nickname: data.nickname}});
         return res.status(201).json({ message:"success", token: token, user_id : check1.id  })
         }
     catch(err){
@@ -91,7 +91,7 @@ router.post('/mail', async(req, res) => {
       
         const data = JSON.stringify(req.body.email)
         const authNum = Math.floor((Math.random() * 1000000) + 1 );
-        const transporter = nodemailer.createTransport({
+        const transporter = createTransport({
             service: 'gmail',
             host:'smtp.gmail.com',
             port: 587,
@@ -121,4 +121,4 @@ router.post('/mail', async(req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

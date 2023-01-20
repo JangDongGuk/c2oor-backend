@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const Review = require('../models/review');
-const User = require('../models/user');
+import Review from '../models/review';
+import User from '../models/user';
 
 router.post('/review', async(req, res) => {
     try{
@@ -14,7 +14,7 @@ router.post('/review', async(req, res) => {
             return res.status(404).json({ message: 'not a mamber'});
         }
 
-        if(user_check.id == data.user_id) {
+        if(user_check.id === data.user_id) {
             await Review.create({  review_text: data.text, user_id : data.user_id })
             const user_review = await Review.findAll({
                 attributes: ['createdAt'],
@@ -82,4 +82,4 @@ router.delete('/review-delete', async(req,res) => {
     }
 });
 
-module.exports = router
+export default router

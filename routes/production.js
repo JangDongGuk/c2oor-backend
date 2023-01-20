@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const Production = require('../models/production');
+import { findOne } from '../models/production';
 
 router.get('/production/:id', async(req,res) => {
     try{
@@ -9,7 +9,7 @@ router.get('/production/:id', async(req,res) => {
         const num = req.params.id
         const data = Number(num)
 
-        const id = await Production.findOne({where:{ id : data }});
+        const id = await findOne({where:{ id : data }});
        
         if (id.id === data) {
         const result = {"name":id.production_name, 
@@ -27,4 +27,4 @@ router.get('/production/:id', async(req,res) => {
     }
 });
 
-module.exports = router;
+export default router;

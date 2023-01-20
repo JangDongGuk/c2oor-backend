@@ -1,10 +1,10 @@
-const Sequelize =  require('sequelize');
+import { Model, TEXT } from 'sequelize';
 
-class Review extends Sequelize.Model {
+class Review extends Model {
     static init(sequelize) {
         return super.init({
             review_text: {
-                type: Sequelize.TEXT,
+                type: TEXT,
                 allowNull : false
             }
         },
@@ -29,5 +29,5 @@ class Review extends Sequelize.Model {
     }
 }
 
-module.exports = Review
+export default Review
 

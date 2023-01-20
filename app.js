@@ -1,26 +1,26 @@
 "use strict"
 
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const redis = require('redis');
+import createError from 'http-errors';
+import express, { json, urlencoded } from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import cors from 'cors';
+import { config } from 'dotenv';
+import redis from 'redis';
 
-const indexRouter = require('./routes/index');
-const signupRouter = require('./routes/signup');
-const jwtRouter = require('./routes/jwt');
-const production = require('./routes/production');
-const review = require('./routes/review');
+import indexRouter from './routes/index';
+import signupRouter from './routes/signup';
+import jwtRouter from './routes/jwt';
+import production from './routes/production';
+import review from './routes/review';
 
-dotenv.config();
+config();
 
 const app = express();
 
-const { Server } = require('http');
-const { sequelize } = require('./models/index');
+import { Server } from 'http';
+import { sequelize } from './models/index';
 
  sequelize.sync({ force: false })
   .then(() => {
@@ -35,8 +35,8 @@ app.engine('html', require('ejs').renderFile);
 app.use(express.static(__dirname + '/public'));
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
@@ -59,4 +59,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

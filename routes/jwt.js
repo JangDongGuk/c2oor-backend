@@ -1,13 +1,12 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const redis = require('redis')
-const redisInit = require('./index');
-const redisClient = redis.createClient('./index');
+import { createClient } from 'redis';
+import redisInit from './index';
+const redisClient = createClient('./index');
 redisClient.connect();
 
-
-const jwt = require('jsonwebtoken');
+import { decode, verify } from 'jsonwebtoken';
 require('dotenv').config();
 
 router.get ('/token', async (req, res, next) => {         
@@ -18,7 +17,7 @@ router.get ('/token', async (req, res, next) => {
         return res.status(401).json({ message: "토큰을찾을수없다." });
     }
 
-    const result = jwt.decode(token,process.env.SECRET_KEY)
+    const result = decode(token,process.env.SECRET_KEY)
    
     const checkdb = await redisClient.exists(result)
     
@@ -27,7 +26,7 @@ router.get ('/token', async (req, res, next) => {
     } 
 
     try {
-        const verfiy = jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        const verfiy = verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if(err){
                 console.log('Error => \n',err);
                 return null;
@@ -41,17 +40,4 @@ router.get ('/token', async (req, res, next) => {
     }
 });
 
-module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-  
+export default router;
